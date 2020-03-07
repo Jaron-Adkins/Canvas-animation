@@ -36,7 +36,6 @@ function connect() {
 function run() {
   c.clearRect(0, 0, canvas.width, canvas.height);
   for (var i = 0; i < particles.length; i++) {
-    qT.add(particles[i]);
     if (particles[i].y + 2 >= canvas.height || particles[i].y - 2 <= 0) particles[i].vY = -particles[i].vY;
     if (particles[i].x + 2 >= canvas.width || particles[i].x - 2 <= 0) particles[i].vX = -particles[i].vX;
     particles[i].x += particles[i].vX;
@@ -47,7 +46,6 @@ function run() {
     c.fill();
   }
   connect();
-  qT.clear();
   window.requestAnimationFrame(run);
 }
 
