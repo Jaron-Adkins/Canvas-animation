@@ -1,0 +1,66 @@
+<html>
+  <style>
+    body {
+      margin: 0px;
+      background-color: black;
+    }
+  </style>
+  <body>
+    <canvas id = "can"></canvas>
+  </body>
+  <script>
+  function particle(x, y) {
+  this.x = x || (canvas.width - 4) * Math.random() + 2;
+  this.y = y || (canvas.height - 4) * Math.random() + 2;
+  this.vX = 4 * Math.random() - 2;
+  this.vY = 4 * Math.random() - 2;
+  this.color = "rgb(" + Math.floor(256 * Math.random()) + "," + Math.floor(256 * Math.random()) + ",255)";
+}
+function connect() {
+  var temp = 0;
+  var temp2 = "";
+  for (var i = 0; i < particles.length; i++) {
+    for (var j = i + 1; j < particles.length; j++) {
+      temp = (particles[i].x - particles[j].x) * (particles[i].x - particles[j].x) + (particles[i].y - particles[j].y) * (particles[i].y - particles[j].y);
+      if (temp < 30000) {
+        c.beginPath();
+        temp2 = particles[i].color.replace("rgb","rgba").replace(")","," + (1 - temp / 30000).toFixed(1) + ")");
+        c.strokeStyle = temp2;
+        c.moveTo(particles[i].x, particles[i].y);
+        c.lineTo(particles[j].x, particles[j].y);
+        c.stroke();
+      }
+    }
+  }
+}
+function run() {
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  for (var i = 0; i < particles.length; i++) {
+    qT.add(particles[i]);
+    if (particles[i].y + 2 >= canvas.height || particles[i].y - 2 <= 0) particles[i].vY = -particles[i].vY;
+    if (particles[i].x + 2 >= canvas.width || particles[i].x - 2 <= 0) particles[i].vX = -particles[i].vX;
+    particles[i].x += particles[i].vX;
+    particles[i].y += particles[i].vY;
+    c.beginPath();
+    c.fillStyle = particles[i].color;
+    c.arc(Math.floor(particles[i].x), Math.floor(particles[i].y), 1, 0, 2 * Math.PI);
+    c.fill();
+  }
+  connect();
+  qT.clear();
+  window.requestAnimationFrame(run);
+}
+
+var particles = [];
+var canvas = document.getElementById("can");
+var c = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+for (var i = 0; i < 300; i++) {
+  particles.push(new particle(Math.floor(Math.random()*canvas.width), Math.floor(Math.random()*canvas.height)));
+}
+
+window.requestAnimationFrame(run);
+
+  </script>
+</html>
